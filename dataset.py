@@ -1,12 +1,11 @@
 import os
-from os import walk
-from os import listdir
-from os.path import isfile, join
-import cv2
+from os.path import isfile
+import sys
 import glob
 import random
 import matplotlib.pylab as plt
 import numpy as np
+import fex
 import Utils
 import config as cf
 
@@ -20,20 +19,19 @@ def image2input(filepaths, numOfClasses, label):
     # preprocessing image
     for f in range(0, numOfFiles):
         file = filepaths[f]
-        image = cv2.imread(file, 0)
-        if image is not None:
+        x = fex.fex(file)
+        if x is not None:
             images = np.append(images, file)
             labels = np.append(labels, label)
-            # convert image to features
-            resize_ = cv2.resize(image, (cf.WIDTH,cf.HEIGHT), interpolation=cv2.INTER_CUBIC)
-            norm_ = cv2.normalize(resize_, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-            x = np.reshape(norm_,(norm_.shape[0]*norm_.shape[1], 1))
             if f == 0:
                 X = x
             else:
                 X = np.append(X, x, axis=1)
+        if len(images)%100 == 0:
+            print('Extracted {} images ...'.format(len(images)), end='\r')
 
-    datalen = len(images)
+    print('{} image(s) have been dispatched.'.format(len(images)))
+    # create labels
     y = Utils.one_hot_encode(numOfClasses, labels)
     
     return X, y, images
@@ -55,7 +53,6 @@ def create_dataset(in_path, out_path, numOfClasses, label, size):
     print("Num of files: " + str(len(filepaths)))
     X, y, images = image2input(filepaths, numOfClasses, label)
     datalen = len(images)
-    print("Num of images: " + str(datalen))
     if size > datalen:
         size = datalen
     samples = random.sample(range(0,size), size)

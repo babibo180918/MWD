@@ -15,5 +15,5 @@ IN_TESTCASE1 = os.path.abspath(os.path.join('..','DATA/TESTCASE1'))
 #OUTPUT DATA
 OUT_PATH = './DATASET/'
 out_testcase1 = OUT_PATH + 'testcase1.npz'
-out_face_dataset = OUT_PATH + 'face_dataset.npz'
 out_masked_dataset = OUT_PATH + 'masked_dataset.npz'
+out_face_dataset = OUT_PATH + 'face_dataset.npz'
