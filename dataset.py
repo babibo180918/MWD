@@ -1,5 +1,6 @@
 import os
 from os.path import isfile
+from pathlib import Path
 import sys
 import glob
 import random
@@ -23,12 +24,12 @@ def image2input(filepaths, numOfClasses, label):
         if x is not None:
             images = np.append(images, file)
             labels = np.append(labels, label)
-            if f == 0:
+            if len(images) == 1:
                 X = x
             else:
                 X = np.append(X, x, axis=1)
         if len(images)%100 == 0:
-            print('Extracted {} images ...'.format(len(images)), end='\r')
+            print('Extracted {} images ...'.format(len(images)), end='\r')        
 
     print('{} image(s) have been dispatched.'.format(len(images)))
     # create labels
@@ -51,27 +52,32 @@ def create_dataset(in_path, out_path, numOfClasses, label, size):
     
     # convert input image to model input.
     print("Num of files: " + str(len(filepaths)))
-    X, y, images = image2input(filepaths, numOfClasses, label)
-    datalen = len(images)
-    if size > datalen:
-        size = datalen
-    samples = random.sample(range(0,size), size)
-    
-    with open(out_path, 'wb') as out_file:
-        np.savez(out_file, X=X, y=y, paths=images)
-        print("Dataset has been saved to " + out_path)
-    
+    numOfMiniBatch = len(filepaths)//cf.MINIBATCH_SIZE
+    for i in range(0,numOfMiniBatch):
+        X, y, images = image2input(filepaths[i*cf.MINIBATCH_SIZE:(i+1)*cf.MINIBATCH_SIZE], numOfClasses, label)
+        with open(out_path, 'ab') as out_file:
+            batch = {'X':X, 'y':y, 'paths':images}
+            np.save(out_file, batch)
+            print("{} samples has been added to {}".format(len(images), out_path))
+        del X,y,images
+    with open(out_path, 'ab') as out_file:
+        X, y, images = image2input(filepaths[numOfMiniBatch*cf.MINIBATCH_SIZE:len(filepaths)], numOfClasses, label)
+        batch = {'X':X, 'y':y, 'paths':images}
+        np.save(out_file, batch)
+        print("{} samples has been added to {}".format(len(images), out_path))
     return 0
 
 def load_dataset(in_path):
     filepaths = None
     X = None
     y = None
-    with np.load(in_path) as data:
-        X = data['X']
-        y = data['y']
-        filepaths = data['paths']    
-    return X, y, filepaths
-    
+    p = Path(in_path)
+    file_sz = os.stat(in_path).st_size
+    i = 0
+    with p.open('rb') as f:
+        while f.tell() < file_sz:
+            batch = np.load(f, allow_pickle=True)
+            i = i+1
+                
 def add_dataset(in_path, dataset_path, numOfClasses, label):
     return 0

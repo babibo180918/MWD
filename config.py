@@ -4,6 +4,7 @@ WIDTH = 64
 HEIGHT = 64
 NUM_OF_FEATURES = WIDTH * HEIGHT
 NUM_OF_CLASSES = 1
+MINIBATCH_SIZE = 10000
 
 #INPUT_DATA
 IN_PATH = os.path.abspath(os.path.join('..','DATA/RMFD'))
@@ -14,6 +15,6 @@ IN_TESTCASE1 = os.path.abspath(os.path.join('..','DATA/TESTCASE1'))
 
 #OUTPUT DATA
 OUT_PATH = './DATASET/'
-out_testcase1 = OUT_PATH + 'testcase1.npz'
-out_masked_dataset = OUT_PATH + 'masked_dataset.npz'
-out_face_dataset = OUT_PATH + 'face_dataset.npz'
+out_testcase1 = OUT_PATH + 'testcase1.npy'
+out_masked_dataset = OUT_PATH + 'masked_dataset.npy'
+out_face_dataset = OUT_PATH + 'face_dataset.npy'
