@@ -1,8 +1,5 @@
-import cv2
 import os
-from os import walk
-from os import listdir
-from os.path import isfile, join
+from os.path import isfile
 import glob
 import random
 import matplotlib.pylab as plt
@@ -15,4 +12,17 @@ def one_hot_encode(numOfClasses, labels):
             encoded_labels[labels[i]-1, i] = 1
             
     return encoded_labels
+
+def getFileList(in_path):
+    filepaths = []
+    if os.path.isfile(in_path):
+        filepaths.append(in_path)
+    elif os.path.isdir(in_path):
+        for filename in glob.glob(in_path + '/**/*.*', recursive=True):
+            filepaths.append(filename)
+    else:
+        print("Path is invalid: " + in_path)
+        return None
+
+    return filepaths
     
