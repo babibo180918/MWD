@@ -4,6 +4,7 @@ import glob
 import random
 import matplotlib.pylab as plt
 import numpy as np
+import cv2
 
 def one_hot_encode(numOfClasses, labels):
     encoded_labels = np.zeros((numOfClasses, len(labels)), dtype=int)
@@ -25,4 +26,14 @@ def getFileList(in_path):
         return None
 
     return filepaths
+
+def image_filter(in_path):
+    filepaths = getFileList(in_path)
+    for f in filepaths:
+        image = cv2.imread(f, 0)
+        if image is None:
+           if os.path.exists(f):
+              os.remove(f)
+              print('Removed file: ' + f)
+    print('Done!')
     
