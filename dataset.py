@@ -104,20 +104,20 @@ def create_mixed_dataset(out_path, numOfClasses, *args):
 
     return 0
 
-def load_dataset(in_path):
+def load_dataset(in_path, batch_num):
     filepaths = None
     X = None
     y = None
     p = Path(in_path)
     file_sz = os.stat(in_path).st_size
-
+    count = 0
     with p.open('rb') as f:
         while f.tell() < file_sz:
             batch = np.load(f, allow_pickle=True)
-            print(batch[()]['X'])
-            print(batch[()]['y'])
-            print(batch[()]['paths'])
-            break;
+            if count == batch_num:
+                f.close()
+                return batch[()]
+            count = count + 1
                 
 def add_dataset(in_path, dataset_path, numOfClasses, label):
     return 0

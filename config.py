@@ -1,5 +1,6 @@
 import os
 
+# Features
 WIDTH = 64
 HEIGHT = 64
 NUM_OF_FEATURES = WIDTH * HEIGHT
