@@ -49,8 +49,8 @@ params, costs = lr.train(model, batch['X'], batch['y'], iteration, learning_rate
 '''
 
 # Predict
-#batch = ds.load_dataset(cf.out_mixed_dataset, 0)
-batch = ds.load_dataset(cf.out_masked_dataset, 0)
+batch = ds.load_dataset(cf.out_mixed_dataset, 1)
+#batch = ds.load_dataset(cf.out_masked_dataset, 0)
 model = lr.load_model(model_output_1)
 params = {}
 params['w'] = model['w']
@@ -58,17 +58,4 @@ params['b'] = model['b']
 Y_pred = lr.predict(params, batch['X'])
 Y =  batch['y']
 paths = batch['paths']
-np.set_printoptions(threshold=sys.maxsize)
-
-a = paths[((Y==1)&(Y_pred==1))[0]]
-b = paths[((Y==1)&(Y_pred==0))[0]]
-c = paths[((Y==0)&(Y_pred==0))[0]]
-d = paths[((Y==0)&(Y_pred==1))[0]]
-
-accuracy = (len(a) + len(c))/Y.shape[1]
-precision = len(a)/(len(a)+len(d))
-recall = len(a)/(len(a)+len(b))
-
-print('accuracy = ' + str(accuracy))
-print('precision = ' + str(precision))
-print('recall = ' + str(recall))
+Utils.skewed_error_analysis(Y, Y_pred, paths, printpath=False)
