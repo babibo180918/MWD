@@ -6,6 +6,35 @@ import random
 import matplotlib.pylab as plt
 import numpy as np
 import cv2
+from skimage import io 
+from skimage.transform import rotate, AffineTransform, warp
+from skimage import img_as_ubyte
+from skimage.util import random_noise
+
+def anticlockwise_rotation(image):
+    angle= random.randint(0,180)
+    return rotate(image, angle)
+
+def clockwise_rotation(image):
+    angle= random.randint(0,180)
+    return rotate(image, -angle)
+
+def h_flip(image):
+    return  np.fliplr(image)
+
+def v_flip(image):
+    return np.flipud(image)
+
+def add_noise(image):
+    return random_noise(image)
+
+def blur_image(image):
+    return cv2.GaussianBlur(image, (9,9),0)
+
+def warp_shift(image): 
+    transform = AffineTransform(translation=(0,40))
+    warp_image = warp(image, transform, mode="wrap")
+    return warp_image
 
 def one_hot_encode(numOfClasses, labels):
     encoded_labels = np.zeros((numOfClasses, len(labels)), dtype=int)
@@ -37,6 +66,34 @@ def image_filter(in_path):
               os.remove(f)
               print('Removed file: ' + f)
     print('Done!')
+
+def image_augmentation(in_path):
+    '''
+    duplicate images by different ways of image processing
+    to augment training data of skewed dataset.(10X)
+    '''
+    
+    transformations = {'rotate_anticlockwise': anticlockwise_rotation,
+                       'rotate_clockwise': clockwise_rotation,
+                       'horizontal_flip': h_flip, 
+                       'vertical_flip': v_flip,
+                       'warp_shift': warp_shift,
+                       'adding_noise': add_noise,
+                       'blurring_image':blur_image
+                       }
+    filepaths = getFileList(in_path)
+    for f in filepaths:
+        filename, ext = os.path.splitext(f)
+        image = io.imread(f)
+        n = 0
+        while n < 10:
+            key = random.choice(list(transformations)) #randomly choosing method to call
+            transformed_image = transformations[key](image)
+            new_image_path= '{}_{}_{}{}'.format(filename, key, n, ext)
+            transformed_image = img_as_ubyte(transformed_image)  #Convert an image to unsigned byte format, with values in [0, 255].
+            transformed_image=cv2.cvtColor(transformed_image, cv2.COLOR_BGR2RGB) #convert image to RGB before saving it
+            cv2.imwrite(new_image_path, transformed_image) # save transformed image to path
+            n = n + 1
     
 def skewed_error_analysis(Y, Y_pred, filepaths, printpath = False):
     true_pos = ((Y==1)&(Y_pred==1))

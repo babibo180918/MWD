@@ -17,41 +17,50 @@ optimizer="GradientDecent"
 initializer="random"
 model_output_1="./MODEL/bbb_lr_1.npy"
 model_output_2="./MODEL/bbb_lr_2.npy"
+balanced_model_output_1="./MODEL/bbb_lr_balanced_1.npy"
 
 # Parameter
 MINIBATCH_SIZE = 10000
 learning_rate = 0.2
 iteration = 10000
+lambd = 0.0
 beta1 = 0.0
 beta2 = 0.0
 epsilon = 0.0
 print_cost = True
 
 # Training
-# Mixed dataset
 '''
+# Mixed dataset
 model = lr.model(cf.NUM_OF_FEATURES, cost_function, optimizer, initializer)
 batch = ds.load_dataset(cf.out_mixed_dataset, 0) # load dataset batch position 0
-params, costs = lr.train(model, batch['X'], batch['y'], iteration, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
+params, costs = lr.train(model, batch['X'], batch['y'], iteration, lambd, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
 '''
 
 '''
-batch = ds.load_dataset(cf.out_mixed_dataset, 0)
+# Retrain
 model = lr.load_model(model_output_1)
-params, costs = lr.train(model, batch['X'], batch['y'], iteration, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
+batch = ds.load_dataset(cf.out_mixed_dataset, 0)
+params, costs = lr.train(model, batch['X'], batch['y'], iteration, lambd, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
 '''
 
-#masked dataset
+# balanced dataset
+model = lr.model(cf.NUM_OF_FEATURES, cost_function, optimizer, initializer)
+batch = ds.load_dataset(cf.out_mixed_balanced_dataset, 0)
+params, costs = lr.train(model, batch['X'][:,0:5000], batch['y'][:,0:5000], iteration, lambd, learning_rate, beta1, beta2, epsilon, balanced_model_output_1, print_cost)
+
+
 '''
+#masked dataset
 batch = ds.load_dataset(cf.out_masked_dataset, 0)
 model = lr.load_model(model_output_1)
-params, costs = lr.train(model, batch['X'], batch['y'], iteration, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
+params, costs = lr.train(model, batch['X'], batch['y'], iteration, lambd, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
 '''
 
 # Predict
-batch = ds.load_dataset(cf.out_mixed_dataset, 1)
+batch = ds.load_dataset(cf.out_mixed_dataset, 0)
 #batch = ds.load_dataset(cf.out_masked_dataset, 0)
-model = lr.load_model(model_output_1)
+model = lr.load_model(balanced_model_output_1)
 params = {}
 params['w'] = model['w']
 params['b'] = model['b']
