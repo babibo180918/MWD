@@ -19,5 +19,5 @@ out_masked_dataset = OUT_PATH + 'masked_dataset.npy'
 out_face_dataset = OUT_PATH + 'face_dataset.npy'
 out_mixed_dataset = OUT_PATH + 'mixed_dataset.npy'
 out_mixed_balanced_dataset = OUT_PATH + 'mixed_balanced_dataset.npy' # 53639 samples with balanced distribution.
-out_mixed_balanced_dataset_train = OUT_PATH + 'mixed_balanced_dataset_train.npy' # 50000 samples with balanced distribution.
-out_mixed_balanced_dataset_test = OUT_PATH + 'mixed_balanced_dataset_test.npy' # 3639 samples with balanced distribution.
+out_mixed_balanced_dataset_train = OUT_PATH + 'mixed_balanced_dataset_train2.npy' # 50000 samples with balanced distribution.
+out_mixed_balanced_dataset_test = OUT_PATH + 'mixed_balanced_dataset_test2.npy' # 3639 samples with balanced distribution.

@@ -18,10 +18,22 @@ initializer="random"
 model_output_1="./MODEL/bbb_lr_1.npy"
 model_output_2="./MODEL/bbb_lr_2.npy"
 balanced_model_output_1="./MODEL/bbb_lr_balanced_1.npy"
+balanced_model_output_2="./MODEL/bbb_lr_balanced_2.npy"
+model_path = balanced_model_output_2
 
-# Parameter
-MINIBATCH_SIZE = 10000
-learning_rate = 0.2
+# Dataset
+#train_dataset_path = cf.out_masked_dataset
+#train_dataset_path = cf.out_face_dataset
+#train_dataset_path = cf.out_mixed_dataset
+#train_dataset_path = cf.out_mixed_balanced_dataset
+train_dataset_path = cf.out_mixed_balanced_dataset_train
+
+#test_dataset_path = cf.out_mixed_dataset
+test_dataset_path = cf.out_mixed_balanced_dataset_test
+
+# Parameters
+MINIBATCH_SIZE = 1000
+learning_rate = 0.1
 iteration = 10000
 lambd = 0.0
 beta1 = 0.0
@@ -30,37 +42,16 @@ epsilon = 0.0
 print_cost = True
 
 # Training
-'''
-# Mixed dataset
-model = lr.model(cf.NUM_OF_FEATURES, cost_function, optimizer, initializer)
-batch = ds.load_dataset(cf.out_mixed_dataset, 0) # load dataset batch position 0
-params, costs = lr.train(model, batch['X'], batch['y'], iteration, lambd, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
-'''
+#model = lr.model(cf.NUM_OF_FEATURES, cost_function, optimizer, initializer)
+#model = lr.load_model(model_path)
+#batch = ds.load_dataset(train_dataset_path, 0)
+#params, costs = lr.train(model, batch['X'], batch['y'], MINIBATCH_SIZE, iteration, lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
+#params, costs = lr.train2(model, train_dataset_path, MINIBATCH_SIZE, iteration, lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
 
-'''
-# Retrain
-model = lr.load_model(model_output_1)
-batch = ds.load_dataset(cf.out_mixed_dataset, 0)
-params, costs = lr.train(model, batch['X'], batch['y'], iteration, lambd, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
-'''
-
-# balanced dataset
-model = lr.model(cf.NUM_OF_FEATURES, cost_function, optimizer, initializer)
-batch = ds.load_dataset(cf.out_mixed_balanced_dataset, 0)
-params, costs = lr.train(model, batch['X'][:,0:5000], batch['y'][:,0:5000], iteration, lambd, learning_rate, beta1, beta2, epsilon, balanced_model_output_1, print_cost)
-
-
-'''
-#masked dataset
-batch = ds.load_dataset(cf.out_masked_dataset, 0)
-model = lr.load_model(model_output_1)
-params, costs = lr.train(model, batch['X'], batch['y'], iteration, lambd, learning_rate, beta1, beta2, epsilon, model_output_1, print_cost)
-'''
 
 # Predict
-batch = ds.load_dataset(cf.out_mixed_dataset, 0)
-#batch = ds.load_dataset(cf.out_masked_dataset, 0)
-model = lr.load_model(balanced_model_output_1)
+batch = ds.load_dataset(test_dataset_path, 0)
+model = lr.load_model(model_path)
 params = {}
 params['w'] = model['w']
 params['b'] = model['b']
