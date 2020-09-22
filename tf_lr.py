@@ -15,8 +15,8 @@ tf.disable_v2_behavior()
 cost_function="cross_entropy"
 optimizer="GradientDescent"
 initializer="zero"
-tf_balanced_model_output="./MODEL/tf_lr_balanced.npy"
-model_path = tf_balanced_model_output
+zero_init_model_output="./MODEL/tf_lr_zero_init.npy"
+model_path = zero_init_model_output
 
 # Dataset
 train_dataset_path = cf.out_mixed_balanced_dataset_train
@@ -25,7 +25,7 @@ test_dataset_path = cf.out_mixed_balanced_dataset_test
 # Parameters
 MINIBATCH_SIZE = 100
 learning_rate = 0.1
-iteration = 100
+num_epochs = 10000
 lambd = 0.0
 beta1 = 0.0
 beta2 = 0.0
@@ -170,4 +170,4 @@ def train(model, dataset, minibatch_size, num_epochs, lambd, learning_rate, beta
     return parameters, costs
 
 model = model(cf.NUM_OF_FEATURES, cost_function, optimizer, initializer)
-params, costs = train(model, train_dataset_path, MINIBATCH_SIZE, iteration, lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
+params, costs = train(model, train_dataset_path, MINIBATCH_SIZE, num_epochs, lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
