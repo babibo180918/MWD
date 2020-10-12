@@ -35,9 +35,9 @@ test_dataset_path = cf.out_mixed_balanced_dataset_test
 
 # Parameters
 MINIBATCH_SIZE = 100
-learning_rate = 0.1
+learning_rate = 0.0
 num_epochs = 10000
-lambd = 0.0
+L2_lambd = 0.0
 beta1 = 0.0
 beta2 = 0.0
 epsilon = 0.0
@@ -46,9 +46,10 @@ print_cost = True
 # Training
 model = lr.model(cf.NUM_OF_FEATURES, cost_function, optimizer, initializer)
 #model = lr.load_model(model_path)
-batch = ds.load_dataset(train_dataset_path, 0)
-params, costs = lr.train(model, batch['X'], batch['y'], MINIBATCH_SIZE, num_epochs, lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
-#params, costs = lr.train2(model, train_dataset_path, MINIBATCH_SIZE, num_epochs, lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
+
+#batch = ds.load_dataset(train_dataset_path, 0)
+#params, costs = lr.train(model, batch['X'], batch['y'], MINIBATCH_SIZE, num_epochs, L2_lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
+params, costs = lr.train2(model, train_dataset_path, MINIBATCH_SIZE, num_epochs, L2_lambd, learning_rate, beta1, beta2, epsilon, model_path, print_cost)
 
 
 # Predict
