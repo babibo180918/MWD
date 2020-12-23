@@ -1,6 +1,7 @@
 import os
 import sys
 from os.path import isfile
+from datetime import date
 import glob
 import random
 import matplotlib.pylab as plt
@@ -58,13 +59,25 @@ def getFileList(in_path):
     return filepaths
 
 def image_filter(in_path):
+    num = 0
     filepaths = getFileList(in_path)
     for f in filepaths:
         image = cv2.imread(f, 0)
         if image is None:
            if os.path.exists(f):
-              os.remove(f)
-              print('Removed file: ' + f)
+               path, filename = os.path.split(f)
+               filename, ext = os.path.splitext(filename)
+               today = date.today()
+               d = today.strftime("%Y%m%d")
+               new_f = os.path.join(path, d + "_" + str(num) + ext)
+               os.rename(f, new_f)
+               image = cv2.imread(new_f, 0)
+               if image is None:
+                   os.remove(new_f)
+                   print('Removed file: ' + new_f)
+               else:
+                   print('Renamed: ' + new_f)
+               num = num + 1
     print('Done!')
 
 def image_augmentation(in_path):
