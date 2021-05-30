@@ -4,6 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
+        "tensorflow>=2.3.0",
         "scikit-image",
         "pydot",
         "scikit-learn",
@@ -20,10 +21,10 @@ setuptools.setup(
         author="Nhan Nguyen",
         author_email="nguyendtnhan@gmail.com",
         install_requires=requirements,
-        description="practice project used to detect mask wearing face"
+        description="practice project used to detect mask wearing face",
         long_description=long_description,
         long_description_content_type="text/markdown",
-        url="https://github.com/babibo180918/MWD"
+        url="https://github.com/babibo180918/MWD",
         packages=setuptools.find_packages(include=["MWD*"]),
         classifiers=[
             "Programming Language :: Python :: 3.6",

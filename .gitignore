@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # DATASET
-DATASET/
-MODEL/
+data/
+output/
